@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BYD | Inteligência de Vendas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#08090c;
+  --panel:#111319;
+  --panel-2:#161922;
+  --panel-3:#1b1f2a;
+  --border:#252a36;
+  --border-soft:#1c202a;
+  --gold:#c9a86a;
+  --gold-soft:rgba(201,168,106,0.14);
+  --gold-dim:rgba(201,168,106,0.45);
+  --blue:#5b86e6;
+  --blue-soft:rgba(91,134,230,0.14);
+  --text:#f2efe7;
+  --text-muted:#8d93a3;
+  --text-dim:#565c6b;
+  --good:#7fae8e;
+  --warn:#c98a5b;
+  --shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{
+  background:var(--ink);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+body{
+  background:
+    radial-gradient(1200px 500px at 15% -10%, rgba(201,168,106,0.07), transparent 60%),
+    radial-gradient(900px 500px at 90% 0%, rgba(91,134,230,0.06), transparent 55%),
+    var(--ink);
+}
+::selection{ background:var(--gold-soft); color:var(--gold); }
+::-webkit-scrollbar{ width:8px; height:8px; }
+::-webkit-scrollbar-track{ background:transparent; }
+::-webkit-scrollbar-thumb{ background:#2a2f3b; border-radius:8px; }
+::-webkit-scrollbar-thumb:hover{ background:#3a4152; }
+
+a{color:inherit;}
+.serif{ font-family:'Fraunces', serif; }
+.num{ font-variant-numeric: tabular-nums; font-feature-settings:"tnum" 1; }
+
+.wrap{ max-width:1400px; margin:0 auto; padding:0 40px 80px; }
+
+/* ---------- TOP BAR ---------- */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:26px 40px; border-bottom:1px solid var(--border-soft);
+  position:sticky; top:0; z-index:50;
+  background:rgba(8,9,12,0.86); backdrop-filter:blur(14px);
+}
+.brand{ display:flex; align-items:center; gap:14px; }
+.brand-mark{
+  width:34px; height:34px; border:1px solid var(--gold-dim); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Fraunces',serif; font-weight:500; font-size:14px; letter-spacing:0.5px; color:var(--gold);
+}
+.brand-text{ display:flex; flex-direction:column; line-height:1.15; }
+.brand-text .b1{ font-size:13px; letter-spacing:3px; color:var(--text); font-weight:600; }
+.brand-text .b2{ font-size:10.5px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin-top:2px;}
+.topbar-right{ display:flex; align-items:center; gap:22px; }
+.badge-period{
+  font-size:11.5px; color:var(--text-muted); border:1px solid var(--border);
+  padding:7px 14px; border-radius:100px; letter-spacing:0.3px;
+  display:flex; align-items:center; gap:8px;
+}
+.badge-period .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold);}
+
+/* ---------- HERO ---------- */
+.hero{
+  padding:64px 0 46px; display:flex; justify-content:space-between; align-items:flex-end; gap:40px;
+  border-bottom:1px solid var(--border-soft);
+}
+.hero-left .eyebrow{
+  font-size:11.5px; letter-spacing:3.5px; color:var(--gold); text-transform:uppercase; margin-bottom:18px;
+  display:flex; align-items:center; gap:10px;
+}
+.hero-left .eyebrow::before{ content:''; width:26px; height:1px; background:var(--gold-dim); }
+.hero-left h1{
+  font-family:'Fraunces',serif; font-weight:300; font-size:46px; line-height:1.08; color:var(--text);
+  max-width:640px; letter-spacing:-0.5px;
+}
+.hero-left h1 em{ font-style:italic; color:var(--gold); font-weight:400; }
+.hero-left p{ margin-top:16px; color:var(--text-muted); font-size:14.5px; max-width:480px; line-height:1.6; }
+.hero-right{
+  text-align:right; position:relative; padding-left:40px; flex-shrink:0;
+}
+.hero-right::before{
+  content:''; position:absolute; left:0; top:8%; bottom:8%; width:1px;
+  background:linear-gradient(var(--border), transparent);
+}
+.hero-stat-label{ font-size:11px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin-bottom:8px;}
+.hero-stat{
+  font-family:'Fraunces',serif; font-weight:300; font-size:76px; line-height:1; color:var(--text);
+  position:relative;
+}
+.hero-stat span.unit{ font-size:24px; color:var(--gold); font-weight:400; margin-left:6px;}
+.hero-stat-sub{ margin-top:10px; font-size:12.5px; color:var(--text-muted); }
+
+/* ---------- FILTERS ---------- */
+.filters-bar{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  padding:22px 0; margin-top:6px;
+}
+.filters-label{ font-size:11px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; margin-right:6px; }
+.msel{ position:relative; }
+.msel-btn{
+  display:flex; align-items:center; gap:10px;
+  background:var(--panel); border:1px solid var(--border); color:var(--text);
+  padding:10px 16px; border-radius:9px; font-size:13px; cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+  min-width:150px; justify-content:space-between;
+}
+.msel-btn:hover{ border-color:var(--gold-dim); }
+.msel-btn.active{ border-color:var(--gold); background:var(--panel-2); }
+.msel-btn .lbl{ display:flex; align-items:center; gap:8px; color:var(--text-muted); }
+.msel-btn .lbl b{ color:var(--text); font-weight:600; }
+.msel-count{
+  background:var(--gold-soft); color:var(--gold); font-size:10.5px; font-weight:600;
+  padding:1px 7px; border-radius:100px; margin-left:2px;
+}
+.chev{ width:9px; height:9px; border-right:1.5px solid var(--text-dim); border-bottom:1.5px solid var(--text-dim);
+  transform:rotate(45deg); margin-top:-3px; transition:transform .15s; flex-shrink:0;}
+.msel-btn.active .chev{ transform:rotate(-135deg); margin-top:3px; }
+
+.msel-panel{
+  position:absolute; top:calc(100% + 10px); left:0; width:250px; max-height:340px;
+  background:var(--panel-2); border:1px solid var(--border); border-radius:12px;
+  box-shadow:var(--shadow); z-index:100; display:none; flex-direction:column;
+  overflow:hidden;
+}
+.msel-panel.open{ display:flex; }
+.msel-search{
+  padding:10px; border-bottom:1px solid var(--border-soft); flex-shrink:0;
+}
+.msel-search input{
+  width:100%; background:var(--panel); border:1px solid var(--border); border-radius:7px;
+  padding:8px 10px; color:var(--text); font-size:12.5px; outline:none; font-family:'Inter',sans-serif;
+}
+.msel-search input:focus{ border-color:var(--gold-dim); }
+.msel-list{ overflow-y:auto; padding:6px; flex:1; }
+.msel-item{
+  display:flex; align-items:center; gap:9px; padding:8px 9px; border-radius:7px; cursor:pointer;
+  font-size:12.8px; color:var(--text-muted); transition:background .1s;
+}
+.msel-item:hover{ background:var(--panel-3); color:var(--text); }
+.msel-item .chk{
+  width:14px; height:14px; border:1.4px solid var(--border); border-radius:4px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; transition:all .12s;
+}
+.msel-item.checked .chk{ background:var(--gold); border-color:var(--gold); }
+.msel-item.checked .chk::after{ content:''; width:4px; height:7px; border-right:1.6px solid #12141a; border-bottom:1.6px solid #12141a; transform:rotate(45deg) translate(-1px,-1px); }
+.msel-item.checked{ color:var(--text); }
+.msel-item .ct{ margin-left:auto; color:var(--text-dim); font-size:11px; }
+.msel-foot{ padding:9px 12px; border-top:1px solid var(--border-soft); display:flex; justify-content:space-between; flex-shrink:0; }
+.msel-foot button{
+  background:none; border:none; color:var(--text-dim); font-size:11.5px; cursor:pointer; font-family:'Inter',sans-serif;
+  letter-spacing:0.3px;
+}
+.msel-foot button:hover{ color:var(--gold); }
+
+.btn-reset{
+  margin-left:auto; display:flex; align-items:center; gap:7px;
+  background:none; border:1px solid var(--border); color:var(--text-muted); font-size:12.5px;
+  padding:10px 16px; border-radius:9px; cursor:pointer; font-family:'Inter',sans-serif; transition:all .15s;
+}
+.btn-reset:hover{ border-color:var(--warn); color:var(--warn); }
+
+.active-tags{ display:flex; gap:8px; flex-wrap:wrap; padding-bottom:6px; }
+.tag{
+  display:flex; align-items:center; gap:6px; background:var(--gold-soft); color:var(--gold);
+  font-size:11.5px; padding:5px 6px 5px 11px; border-radius:100px; border:1px solid rgba(201,168,106,0.25);
+}
+.tag button{ background:none; border:none; color:var(--gold); cursor:pointer; font-size:13px; line-height:1; padding:2px 5px; opacity:0.7;}
+.tag button:hover{ opacity:1; }
+
+/* ---------- KPI ROW ---------- */
+.kpi-row{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; padding:30px 0 42px; }
+.kpi-card{
+  background:linear-gradient(180deg, var(--panel), var(--panel));
+  border:1px solid var(--border); border-radius:14px; padding:22px 20px;
+  position:relative; overflow:hidden;
+}
+.kpi-card::after{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  opacity:0.5;
+}
+.kpi-label{ font-size:10.5px; letter-spacing:1.6px; text-transform:uppercase; color:var(--text-dim); margin-bottom:14px; }
+.kpi-value{ font-family:'Fraunces',serif; font-weight:400; font-size:27px; color:var(--text); line-height:1.15; }
+.kpi-value.gold{ color:var(--gold); }
+.kpi-sub{ font-size:11.5px; color:var(--text-muted); margin-top:8px; }
+
+/* ---------- SECTION ---------- */
+.section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px; gap:20px; }
+.section-head h2{ font-family:'Fraunces',serif; font-weight:400; font-size:22px; color:var(--text); }
+.section-head .q{ font-size:12px; color:var(--gold); font-style:italic; font-family:'Fraunces',serif; }
+.section-head .desc{ font-size:12.5px; color:var(--text-dim); margin-top:5px; }
+
+.grid-2{ display:grid; grid-template-columns:1.35fr 1fr; gap:20px; margin-bottom:20px; }
+.panel{
+  background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:26px 26px 22px;
+}
+.panel-tight{ padding:0; overflow:hidden; }
+.chart-box{ height:280px; position:relative; margin-top:6px; }
+.chart-box.donut{ height:250px; }
+
+.legend-row{ display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; padding-top:16px; border-top:1px solid var(--border-soft); }
+.legend-item{ display:flex; align-items:center; gap:7px; font-size:11.5px; color:var(--text-muted); }
+.legend-dot{ width:8px; height:8px; border-radius:2px; }
+
+/* ---------- TABLE ---------- */
+table{ width:100%; border-collapse:collapse; }
+thead th{
+  text-align:left; font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--text-dim);
+  padding:16px 26px 12px; border-bottom:1px solid var(--border); font-weight:600;
+}
+thead th.num-col, tbody td.num-col{ text-align:right; }
+tbody td{ padding:14px 26px; font-size:13px; border-bottom:1px solid var(--border-soft); color:var(--text-muted); }
+tbody tr:last-child td{ border-bottom:none; }
+tbody tr{ transition:background .12s; }
+tbody tr:hover{ background:var(--panel-2); }
+.rank-cell{ display:flex; align-items:center; gap:12px; }
+.rank-num{ font-family:'Fraunces',serif; font-size:13px; color:var(--text-dim); width:18px; }
+.city-name{ color:var(--text); font-weight:500; }
+.model-pill{
+  display:inline-flex; align-items:center; gap:6px; background:var(--panel-3); border:1px solid var(--border);
+  padding:4px 10px; border-radius:100px; font-size:11.5px; color:var(--text);
+}
+.model-pill .sw{ width:6px; height:6px; border-radius:50%; }
+.bar-mini{ width:100%; height:4px; background:var(--border-soft); border-radius:4px; margin-top:6px; overflow:hidden;}
+.bar-mini i{ display:block; height:100%; background:var(--gold); border-radius:4px; }
+td.share{ color:var(--gold); font-weight:600; }
+
+/* ---------- INSIGHTS ---------- */
+.insights-col{ display:flex; flex-direction:column; gap:12px; max-height:560px; overflow-y:auto; padding-right:6px;}
+.insight-card{
+  background:var(--panel-2); border:1px solid var(--border-soft); border-radius:12px; padding:16px 18px;
+  border-left:2px solid var(--gold-dim);
+}
+.insight-card .ic-city{ font-family:'Fraunces',serif; font-size:15px; color:var(--text); display:flex; justify-content:space-between; align-items:baseline;}
+.insight-card .ic-city .st{ font-size:10.5px; color:var(--text-dim); font-family:'Inter',sans-serif; letter-spacing:0.5px; }
+.insight-card p{ font-size:12.3px; color:var(--text-muted); margin-top:7px; line-height:1.55; }
+.insight-card p b{ color:var(--gold); font-weight:600; }
+.insights-empty{ color:var(--text-dim); font-size:13px; padding:30px 10px; text-align:center; }
+
+/* ---------- FOOTER ---------- */
+.foot{ margin-top:50px; padding-top:24px; border-top:1px solid var(--border-soft);
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+.foot p{ font-size:11px; color:var(--text-dim); letter-spacing:0.3px; }
+.foot .signature{ font-family:'Fraunces',serif; font-style:italic; font-size:12.5px; color:var(--gold-dim); }
+
+@media (max-width:1180px){
+  .kpi-row{ grid-template-columns:repeat(3,1fr); }
+  .grid-2{ grid-template-columns:1fr; }
+  .hero{ flex-direction:column; align-items:flex-start; gap:24px;}
+  .hero-right{ padding-left:0; text-align:left; }
+  .hero-right::before{ display:none; }
+}
+@media (max-width:720px){
+  .wrap{ padding:0 18px 60px; }
+  .topbar{ padding:20px 18px; }
+  .kpi-row{ grid-template-columns:repeat(2,1fr); }
+  .hero-left h1{ font-size:32px; }
+  .hero-stat{ font-size:52px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">B</div>
+    <div class="brand-text">
+      <span class="b1">BYD</span>
+      <span class="b2">Sales Intelligence</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="badge-period"><span class="dot"></span><span id="period-badge">—</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-left">
+      <div class="eyebrow">Painel Comercial &middot; Rede Santander</div>
+      <h1>Leitura refinada do <em>desempenho de vendas</em> BYD nos Estados Unidos.</h1>
+      <p>Explore modelo, ano, praça e forma de pagamento para revelar os padrões de demanda por trás de cada entrega.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-stat-label">Vendas no recorte</div>
+      <div class="hero-stat num" id="hero-total">100<span class="unit">un.</span></div>
+      <div class="hero-stat-sub" id="hero-sub">de 100 registros na base</div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters-bar">
+    <span class="filters-label">Filtrar</span>
+    <div class="msel" data-key="model">
+      <button class="msel-btn"><span class="lbl">Modelo <b class="cur-label"></b></span><span class="chev"></span></button>
+      <div class="msel-panel">
+        <div class="msel-search"><input type="text" placeholder="Buscar modelo…"></div>
+        <div class="msel-list"></div>
+        <div class="msel-foot"><button data-act="all">Selecionar tudo</button><button data-act="clear">Limpar</button></div>
+      </div>
+    </div>
+    <div class="msel" data-key="year">
+      <button class="msel-btn"><span class="lbl">Ano modelo <b class="cur-label"></b></span><span class="chev"></span></button>
+      <div class="msel-panel">
+        <div class="msel-list"></div>
+        <div class="msel-foot"><button data-act="all">Selecionar tudo</button><button data-act="clear">Limpar</button></div>
+      </div>
+    </div>
+    <div class="msel" data-key="city">
+      <button class="msel-btn"><span class="lbl">Cidade <b class="cur-label"></b></span><span class="chev"></span></button>
+      <div class="msel-panel">
+        <div class="msel-search"><input type="text" placeholder="Buscar cidade…"></div>
+        <div class="msel-list"></div>
+        <div class="msel-foot"><button data-act="all">Selecionar tudo</button><button data-act="clear">Limpar</button></div>
+      </div>
+    </div>
+    <div class="msel" data-key="pay">
+      <button class="msel-btn"><span class="lbl">Pagamento <b class="cur-label"></b></span><span class="chev"></span></button>
+      <div class="msel-panel">
+        <div class="msel-list"></div>
+        <div class="msel-foot"><button data-act="all">Selecionar tudo</button><button data-act="clear">Limpar</button></div>
+      </div>
+    </div>
+    <button class="btn-reset" id="btn-reset">Limpar filtros</button>
+  </div>
+  <div class="active-tags" id="active-tags"></div>
+
+  <!-- KPIs -->
+  <div class="kpi-row" id="kpi-row"></div>
+
+  <!-- Q2: ano modelo mais vendido -->
+  <div class="section-head">
+    <div>
+      <h2>Ano de modelo com maior volume</h2>
+      <div class="desc">Distribuição das vendas por ano de fabricação no período selecionado</div>
+    </div>
+    <div class="q">"Qual o ano de modelo mais saiu em um período"</div>
+  </div>
+  <div class="grid-2">
+    <div class="panel">
+      <div class="chart-box" id="chart-year"></div>
+    </div>
+    <div class="panel">
+      <div class="section-head" style="margin-bottom:4px;">
+        <div><h2 style="font-size:17px;">Formas de pagamento</h2></div>
+      </div>
+      <div class="chart-box donut" id="chart-pay"></div>
+      <div class="legend-row" id="pay-legend"></div>
+    </div>
+  </div>
+
+  <!-- Q1: modelo por cidade -->
+  <div class="section-head" style="margin-top:14px;">
+    <div>
+      <h2>Modelo líder por cidade</h2>
+      <div class="desc">Ranking das praças com maior volume e o modelo BYD mais vendido em cada uma</div>
+    </div>
+    <div class="q">"Quais os principais modelos vendidos por cidade"</div>
+  </div>
+  <div class="grid-2">
+    <div class="panel panel-tight">
+      <table>
+        <thead>
+          <tr>
+            <th>Cidade</th>
+            <th>Modelo líder</th>
+            <th class="num-col">Vendas</th>
+            <th class="num-col">Participação</th>
+          </tr>
+        </thead>
+        <tbody id="city-table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Q3: insights por cidade -->
+    <div class="panel">
+      <div class="section-head" style="margin-bottom:4px;">
+        <div><h2 style="font-size:17px;">Leitura por praça</h2>
+        <div class="desc">Insights automáticos</div></div>
+      </div>
+      <div class="insights-col" id="insights-col"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <p>Fonte: PLANILHA_BYD_SANITIZADA_SANTANDER.xlsx &middot; 100 registros &middot; dados sanitizados</p>
+    <div class="signature">Desacelere. Seu bem maior é a vida.</div>
+  </div>
+
+</div>
+
+<script id="raw-data" type="application/json">[{"date":null,"model":"BYD Dolphin","year":2022,"price":79500.0,"mileage":9800,"pay":"Credit Card","city":"Boston","state":"MA","status":"Delivered"},{"date":"2024-03-14","model":"BYD Dolphin Mini","year":2024,"price":235000.0,"mileage":1200,"pay":"Wire Transfer","city":"Seattle","state":"WA","status":"Delivered"},{"date":"2024-04-18","model":"BYD Dolphin Plus","year":2023,"price":112750.0,"mileage":6400,"pay":"Financing","city":"Austin","state":"TX","status":"In Transit"},{"date":null,"model":"BYD Seal","year":2021,"price":68900.0,"mileage":28,"pay":"Cash","city":"Denver","state":"CO","status":"Pending"},{"date":"2024-05-22","model":"BYD Seal Performance","year":2024,"price":121000.0,"mileage":0,"pay":"Bank Transfer","city":"Los Angeles","state":"CA","status":"Delivered"},{"date":"2024-08-06","model":"BYD Seal Premium","year":2023,"price":104500.0,"mileage":14500,"pay":"Credit Card","city":"Miami","state":"FL","status":"Cancelled"},{"date":"2024-07-11","model":"BYD Song Plus","year":2020,"price":96300.0,"mileage":41000,"pay":"Lease","city":"New York","state":"NY","status":"Delivered"},{"date":null,"model":"BYD Song Pro","year":2022,"price":89750.0,"mileage":11744,"pay":"Wire Transfer","city":"San Diego","state":"CA","status":"Pending Approval"},{"date":"2024-08-19","model":"BYD Yuan Plus","year":2021,"price":73500.0,"mileage":22300,"pay":"Debit Card","city":"Chicago","state":"IL","status":"Shipped"},{"date":"2024-09-02","model":"BYD Yuan Pro","year":2024,"price":95000.0,"mileage":3500,"pay":"Financing","city":"Phoenix","state":"AZ","status":"In Transit"},{"date":"2024-09-17","model":"BYD Han","year":2023,"price":153200.5,"mileage":11,"pay":"ACH Payment","city":"Dallas","state":"TX","status":"Delivered"},{"date":null,"model":"BYD Tan","year":2024,"price":241000.0,"mileage":750,"pay":"Wire Transfer","city":"Las Vegas","state":"NV","status":"Pending"},{"date":"2024-05-11","model":"BYD Dolphin","year":2022,"price":132000.0,"mileage":19250,"pay":"Cash","city":"San Jose","state":"CA","status":"Delivered"},{"date":"2024-12-12","model":"BYD Seal","year":2024,"price":188000.0,"mileage":2100,"pay":"Crypto Payment","city":"Houston","state":"TX","status":"Awaiting Delivery"},{"date":"2024-12-25","model":"BYD Song Plus","year":2023,"price":127800.0,"mileage":12000,"pay":"Credit Card","city":"Atlanta","state":"GA","status":"Delivered"},{"date":"2025-01-06","model":"BYD Yuan Plus","year":2021,"price":58900.0,"mileage":33700,"pay":"Bank Transfer","city":"Orlando","state":"FL","status":"Pending"},{"date":null,"model":"BYD Dolphin Mini","year":2024,"price":164000.0,"mileage":900,"pay":"Financing","city":"Portland","state":"OR","status":"In Transit"},{"date":"2025-02-14","model":"BYD Song Pro","year":2023,"price":118500.0,"mileage":7800,"pay":"Wire Transfer","city":"Charlotte","state":"NC","status":"Delivered"},{"date":null,"model":"BYD Han","year":2022,"price":91300.0,"mileage":16000,"pay":"Credit Card","city":"Nashville","state":"TN","status":"Pending"},{"date":"2025-03-21","model":"BYD Tan","year":2024,"price":158750.0,"mileage":2500,"pay":"Lease","city":"Minneapolis","state":"MN","status":"Delivered"},{"date":"2025-03-28","model":"BYD Dolphin","year":2020,"price":72000.0,"mileage":49000,"pay":"Bank Transfer","city":"Philadelphia","state":"PA","status":"Cancelled"},{"date":"2025-04-09","model":"BYD Seal","year":2025,"price":86500.0,"mileage":0,"pay":"Wire Transfer","city":"San Antonio","state":"TX","status":"Delivered"},{"date":null,"model":"BYD Song Plus","year":2024,"price":270000.0,"mileage":1050,"pay":"Cash","city":"Salt Lake City","state":"UT","status":"Awaiting Pickup"},{"date":"2025-05-12","model":"BYD Yuan Plus","year":2023,"price":139000.0,"mileage":6250,"pay":"Financing","city":"Raleigh","state":"NC","status":"In Transit"},{"date":"2025-06-18","model":"BYD Dolphin Mini","year":2021,"price":76800.0,"mileage":38400,"pay":"Credit Card","city":"Detroit","state":"MI","status":"Delivered"},{"date":null,"model":"BYD Song Pro","year":2024,"price":173600.0,"mileage":400,"pay":"Wire Transfer","city":"Columbus","state":"OH","status":"Pending"},{"date":"2025-07-07","model":"BYD Han","year":2022,"price":119900.0,"mileage":13600,"pay":"Cash","city":"Indianapolis","state":"IN","status":"Delivered"},{"date":"2025-07-22","model":"BYD Tan","year":2023,"price":109250.0,"mileage":8900,"pay":"Lease","city":"Fort Worth","state":"TX","status":"In Transit"},{"date":"2025-08-14","model":"BYD Dolphin","year":2022,"price":82000.0,"mileage":21750,"pay":"Wire Transfer","city":"Jacksonville","state":"FL","status":"Delivered"},{"date":"2025-09-01","model":"BYD Seal","year":2025,"price":214000.0,"mileage":0,"pay":"Crypto Payment","city":"San Diego","state":"CA","status":"Pending Review"},{"date":null,"model":"BYD Song Plus","year":2024,"price":124500.0,"mileage":4800,"pay":"Credit Card","city":"Tampa","state":"FL","status":"Delivered"},{"date":"2025-09-18","model":"BYD Yuan Plus","year":2023,"price":98200.0,"mileage":12200,"pay":"Bank Transfer","city":"Sacramento","state":"CA","status":"Pending"},{"date":"2025-10-04","model":"BYD Dolphin Mini","year":2022,"price":67500.0,"mileage":24100,"pay":"Financing","city":"Cleveland","state":"OH","status":"Delivered"},{"date":"2025-10-12","model":"BYD Song Pro","year":2025,"price":116900.0,"mileage":0,"pay":"Wire Transfer","city":"Milwaukee","state":"WI","status":"In Transit"},{"date":"2025-10-29","model":"BYD Han","year":2024,"price":112000.0,"mileage":10,"pay":"Cash","city":"Kansas City","state":"MO","status":"Delivered"},{"date":"2025-02-11","model":"BYD Tan","year":2021,"price":74000.0,"mileage":31000,"pay":"Debit Card","city":"Omaha","state":"NE","status":"Cancelled"},{"date":"2025-11-16","model":"BYD Dolphin Plus","year":2024,"price":198300.0,"mileage":2400,"pay":"Wire Transfer","city":"Albuquerque","state":"NM","status":"Awaiting Delivery"},{"date":null,"model":"BYD Seal Premium","year":2023,"price":103750.0,"mileage":6773,"pay":"Wire Transfer","city":"Tucson","state":"AZ","status":"Pending Approval"},{"date":null,"model":"BYD Seal Performance","year":2024,"price":93600.0,"mileage":5800,"pay":"Financing","city":"Fresno","state":"CA","status":"Shipped"},{"date":"2025-12-07","model":"BYD Song Plus","year":2025,"price":129000.0,"mileage":0,"pay":"ACH Payment","city":"Virginia Beach","state":"VA","status":"In Transit"},{"date":"2025-12-22","model":"BYD Yuan Plus","year":2022,"price":136000.0,"mileage":18400,"pay":"Credit Card","city":"Colorado Springs","state":"CO","status":"Delivered"},{"date":null,"model":"BYD Dolphin","year":2024,"price":286500.0,"mileage":700,"pay":"Wire Transfer","city":"Arlington","state":"TX","status":"Pending"},{"date":"2026-01-08","model":"BYD Dolphin Mini","year":2023,"price":92800.0,"mileage":15000,"pay":"Lease","city":"Bakersfield","state":"CA","status":"Delivered"},{"date":"2026-01-15","model":"BYD Song Pro","year":2022,"price":72400.0,"mileage":19750,"pay":"Cash","city":"Mesa","state":"AZ","status":"Awaiting Pickup"},{"date":"2026-01-28","model":"BYD Han","year":2025,"price":158500.0,"mileage":3200,"pay":"Crypto Payment","city":"Atlanta","state":"GA","status":"Delivered"},{"date":"2026-02-03","model":"BYD Tan","year":2021,"price":69900.0,"mileage":27600,"pay":"Bank Transfer","city":"Long Beach","state":"CA","status":"Pending"},{"date":null,"model":"BYD Dolphin","year":2024,"price":141250.0,"mileage":2100,"pay":"Financing","city":"Oakland","state":"CA","status":"In Transit"},{"date":"2026-02-19","model":"BYD Seal","year":2020,"price":71500.0,"mileage":52000,"pay":"Wire Transfer","city":"Tulsa","state":"OK","status":"Delivered"},{"date":"2026-02-25","model":"BYD Song Plus","year":2023,"price":146800.0,"mileage":11300,"pay":"Credit Card","city":"Wichita","state":"KS","status":"Pending"},{"date":"2026-03-01","model":"BYD Yuan Plus","year":2025,"price":89700.0,"mileage":0,"pay":"Lease","city":"New Orleans","state":"LA","status":"Delivered"},{"date":"2026-03-14","model":"BYD Dolphin Mini","year":2022,"price":104600.0,"mileage":15900,"pay":"Bank Transfer","city":"Honolulu","state":"HI","status":"Cancelled"},{"date":null,"model":"BYD Song Pro","year":2024,"price":142000.0,"mileage":6600,"pay":"Wire Transfer","city":"Anaheim","state":"CA","status":"Delivered"},{"date":"2026-04-08","model":"BYD Han","year":2021,"price":78400.0,"mileage":40250,"pay":"Cash","city":"Henderson","state":"NV","status":"Awaiting Review"},{"date":null,"model":"BYD Tan","year":2025,"price":169000.0,"mileage":850,"pay":"Financing","city":"Lexington","state":"KY","status":"In Transit"},{"date":"2026-04-21","model":"BYD Dolphin","year":2024,"price":268900.0,"mileage":1400,"pay":"Credit Card","city":"Riverside","state":"CA","status":"Delivered"},{"date":"2026-04-29","model":"BYD Seal","year":2023,"price":101300.0,"mileage":12700,"pay":"Wire Transfer","city":"Corpus Christi","state":"TX","status":"Pending"},{"date":"2026-05-05","model":"BYD Song Plus","year":2021,"price":66750.0,"mileage":29800,"pay":"Cash","city":"St. Louis","state":"MO","status":"Delivered"},{"date":"2026-05-14","model":"BYD Yuan Plus","year":2024,"price":127900.0,"mileage":7500,"pay":"Lease","city":"Pittsburgh","state":"PA","status":"In Transit"},{"date":"2026-05-23","model":"BYD Dolphin Mini","year":2025,"price":200000.0,"mileage":1950,"pay":"Wire Transfer","city":"Cincinnati","state":"OH","status":"Delivered"},{"date":"2026-06-02","model":"BYD Song Pro","year":2023,"price":132000.0,"mileage":8800,"pay":"Crypto Payment","city":"Anchorage","state":"AK","status":"Pending Review"},{"date":"2026-06-15","model":"BYD Han","year":2024,"price":176400.0,"mileage":600,"pay":"Credit Card","city":"Plano","state":"TX","status":"Delivered"},{"date":null,"model":"BYD Tan","year":2022,"price":108500.0,"mileage":16200,"pay":"Bank Transfer","city":"Newark","state":"NJ","status":"Cancelled"},{"date":"2026-07-07","model":"BYD Dolphin Plus","year":2021,"price":59000.0,"mileage":36000,"pay":"Financing","city":"Greensboro","state":"NC","status":"Awaiting Delivery"},{"date":"2026-07-20","model":"BYD Seal Premium","year":2025,"price":218000.0,"mileage":0,"pay":"Wire Transfer","city":"Lincoln","state":"NE","status":"Pending"},{"date":null,"model":"BYD Seal Performance","year":2024,"price":99950.0,"mileage":5300,"pay":"Debit Card","city":"Jersey City","state":"NJ","status":"Delivered"},{"date":"2026-04-08","model":"BYD Song Plus","year":2024,"price":121750.0,"mileage":5872,"pay":"Credit Card","city":"Chandler","state":"AZ","status":"Delivered"},{"date":"2026-08-18","model":"BYD Yuan Plus","year":2023,"price":91500.0,"mileage":13300,"pay":"Lease","city":"Reno","state":"NV","status":"Shipped"},{"date":"2026-08-31","model":"BYD Dolphin","year":2022,"price":134000.0,"mileage":20100,"pay":"Wire Transfer","city":"Buffalo","state":"NY","status":"In Transit"},{"date":"2026-09-09","model":"BYD Dolphin Mini","year":2024,"price":96800.0,"mileage":0,"pay":"ACH Payment","city":"Durham","state":"NC","status":"Delivered"},{"date":"2026-09-17","model":"BYD Song Pro","year":2025,"price":131600.0,"mileage":2900,"pay":"Wire Transfer","city":"Laredo","state":"TX","status":"Pending Approval"},{"date":"2026-09-28","model":"BYD Han","year":2023,"price":94300.0,"mileage":13100,"pay":"Cash","city":"Madison","state":"WI","status":"Delivered"},{"date":"2026-10-06","model":"BYD Tan","year":2025,"price":242000.0,"mileage":1100,"pay":"Crypto Payment","city":"Lubbock","state":"TX","status":"Awaiting Pickup"},{"date":"2026-10-16","model":"BYD Dolphin","year":2022,"price":82750.0,"mileage":22500,"pay":"Credit Card","city":"Toledo","state":"OH","status":"Cancelled"},{"date":"2026-10-29","model":"BYD Seal","year":2026,"price":91300.0,"mileage":0,"pay":"Wire Transfer","city":"Irvine","state":"CA","status":"Delivered"},{"date":"2026-11-03","model":"BYD Song Plus","year":2021,"price":79900.0,"mileage":44800,"pay":"Financing","city":"Garland","state":"TX","status":"Pending"},{"date":null,"model":"BYD Yuan Plus","year":2024,"price":111000.0,"mileage":6700,"pay":"Bank Transfer","city":"Irving","state":"TX","status":"In Transit"},{"date":"2026-12-11","model":"BYD Dolphin Mini","year":2023,"price":156500.0,"mileage":4200,"pay":"Cash","city":"Chesapeake","state":"VA","status":"Delivered"},{"date":"2026-12-24","model":"BYD Song Pro","year":2025,"price":119900.0,"mileage":1250,"pay":"Lease","city":"Scottsdale","state":"AZ","status":"Pending"},{"date":null,"model":"BYD Han","year":2022,"price":73200.0,"mileage":18600,"pay":"Wire Transfer","city":"Norfolk","state":"VA","status":"Delivered"},{"date":"2026-12-28","model":"BYD Tan","year":2024,"price":224000.0,"mileage":3000,"pay":"Wire Transfer","city":"Boise","state":"ID","status":"Awaiting Delivery"},{"date":"2027-01-15","model":"BYD Dolphin","year":2024,"price":126900.0,"mileage":7200,"pay":"Credit Card","city":"Orlando","state":"FL","status":"Delivered"},{"date":"2027-01-29","model":"BYD Seal","year":2023,"price":84500.0,"mileage":21400,"pay":"Bank Transfer","city":"San Jose","state":"CA","status":"Pending"},{"date":"2027-02-11","model":"BYD Song Plus","year":2022,"price":69800.0,"mileage":26300,"pay":"Financing","city":"Tampa","state":"FL","status":"Delivered"},{"date":null,"model":"BYD Yuan Plus","year":2025,"price":132700.0,"mileage":0,"pay":"Wire Transfer","city":"Denver","state":"CO","status":"In Transit"},{"date":"2027-03-05","model":"BYD Dolphin Mini","year":2021,"price":81000.0,"mileage":42,"pay":"Cash","city":"Austin","state":"TX","status":"Delivered"},{"date":"2027-03-18","model":"BYD Song Pro","year":2023,"price":78900.0,"mileage":17500,"pay":"Debit Card","city":"Seattle","state":"WA","status":"Cancelled"},{"date":"2027-04-02","model":"BYD Han","year":2026,"price":249300.0,"mileage":900,"pay":"Wire Transfer","city":"Boston","state":"MA","status":"Awaiting Delivery"},{"date":null,"model":"BYD Tan","year":2024,"price":108750.0,"mileage":5530,"pay":"Wire Transfer","city":"Phoenix","state":"AZ","status":"Pending Approval"},{"date":null,"model":"BYD Dolphin Plus","year":2026,"price":92600.0,"mileage":0,"pay":"Financing","city":"Chicago","state":"IL","status":"Shipped"},{"date":"2027-05-12","model":"BYD Seal Premium","year":2025,"price":164000.0,"mileage":0,"pay":"ACH Payment","city":"Dallas","state":"TX","status":"In Transit"},{"date":"2027-05-27","model":"BYD Seal Performance","year":2024,"price":119000.0,"mileage":13400,"pay":"Credit Card","city":"San Francisco","state":"CA","status":"Delivered"},{"date":null,"model":"BYD Song Plus","year":2026,"price":232500.0,"mileage":1700,"pay":"Wire Transfer","city":"Las Vegas","state":"NV","status":"Pending"},{"date":"2027-06-18","model":"BYD Yuan Plus","year":2023,"price":96800.0,"mileage":14000,"pay":"Lease","city":"Charlotte","state":"NC","status":"Delivered"},{"date":"2027-07-03","model":"BYD Dolphin","year":2022,"price":74400.0,"mileage":20750,"pay":"Cash","city":"Mesa","state":"AZ","status":"Awaiting Pickup"},{"date":"2027-07-22","model":"BYD Dolphin Mini","year":2025,"price":148500.0,"mileage":5200,"pay":"Crypto Payment","city":"Atlanta","state":"GA","status":"Delivered"},{"date":"2027-08-08","model":"BYD Song Pro","year":2021,"price":71900.0,"mileage":29600,"pay":"Bank Transfer","city":"Long Beach","state":"CA","status":"Pending"},{"date":null,"model":"BYD Han","year":2024,"price":143250.0,"mileage":3100,"pay":"Financing","city":"Oakland","state":"CA","status":"In Transit"},{"date":"2027-09-19","model":"BYD Tan","year":2020,"price":137500.0,"mileage":48000,"pay":"Wire Transfer","city":"Tulsa","state":"OK","status":"Delivered"},{"date":"2027-09-25","model":"BYD Seal","year":2025,"price":204800.0,"mileage":3300,"pay":"Credit Card","city":"Wichita","state":"KS","status":"Pending"},{"date":"2027-10-01","model":"BYD Song Plus","year":2024,"price":271700.0,"mileage":1050,"pay":"Lease","city":"New Orleans","state":"LA","status":"Delivered"}]</script>
+<script>
+/* ======================= DATA ======================= */
+const RAW = JSON.parse(document.getElementById('raw-data').textContent);
+
+const MODEL_COLORS = {};
+const PALETTE = ['#c9a86a','#5b86e6','#7fae8e','#c98a5b','#9d7fd6','#5bb0c9','#d68fae','#8f9e5b','#c96a6a','#6ac9a8','#a8896a','#6a8fc9'];
+[...new Set(RAW.map(d=>d.model))].sort().forEach((m,i)=> MODEL_COLORS[m]=PALETTE[i%PALETTE.length]);
+
+const fmtBRnum = n => n.toLocaleString('pt-BR');
+const fmtUSD = n => n.toLocaleString('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0});
+const fmtUSDk = n => n>=1000 ? '$'+(n/1000).toFixed(0)+'k' : '$'+n.toFixed(0);
+
+/* ======================= FILTER STATE ======================= */
+const FIELD = {model:'model', year:'year', city:'city', pay:'pay'};
+const state = { model:new Set(), year:new Set(), city:new Set(), pay:new Set() };
+
+const options = {};
+for(const k in FIELD){
+  options[k] = [...new Set(RAW.map(d=>d[FIELD[k]]))].sort((a,b)=> typeof a==='number' ? a-b : a.localeCompare(b));
+}
+
+function filtered(){
+  return RAW.filter(d=>{
+    for(const k in FIELD){
+      if(state[k].size>0 && !state[k].has(d[FIELD[k]])) return false;
+    }
+    return true;
+  });
+}
+
+/* ======================= BUILD MULTI-SELECTS ======================= */
+document.querySelectorAll('.msel').forEach(msel=>{
+  const key = msel.dataset.key;
+  const list = msel.querySelector('.msel-list');
+  const searchInput = msel.querySelector('.msel-search input');
+
+  function renderList(filterTxt=''){
+    list.innerHTML = '';
+    const counts = {};
+    RAW.forEach(d=>{ const v=d[FIELD[key]]; counts[v]=(counts[v]||0)+1; });
+    options[key].filter(v=> String(v).toLowerCase().includes(filterTxt.toLowerCase())).forEach(v=>{
+      const item = document.createElement('div');
+      item.className = 'msel-item' + (state[key].has(v)?' checked':'');
+      item.innerHTML = `<span class="chk"></span><span>${v}</span><span class="ct">${counts[v]||0}</span>`;
+      item.onclick = ()=>{
+        if(state[key].has(v)) state[key].delete(v); else state[key].add(v);
+        renderList(searchInput?searchInput.value:'');
+        updateAll();
+      };
+      list.appendChild(item);
+    });
+  }
+  renderList();
+  if(searchInput) searchInput.addEventListener('input', e=> renderList(e.target.value));
+
+  msel.querySelector('.msel-btn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const isOpen = msel.querySelector('.msel-panel').classList.contains('open');
+    document.querySelectorAll('.msel-panel').forEach(p=>p.classList.remove('open'));
+    document.querySelectorAll('.msel-btn').forEach(b=>b.classList.remove('active'));
+    if(!isOpen){
+      msel.querySelector('.msel-panel').classList.add('open');
+      msel.querySelector('.msel-btn').classList.add('active');
+    }
+  });
+
+  msel.querySelectorAll('.msel-foot button').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      if(btn.dataset.act==='all') options[key].forEach(v=>state[key].add(v));
+      else state[key].clear();
+      renderList(searchInput?searchInput.value:'');
+      updateAll();
+    });
+  });
+});
+document.addEventListener('click', ()=>{
+  document.querySelectorAll('.msel-panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.msel-btn').forEach(b=>b.classList.remove('active'));
+});
+
+document.getElementById('btn-reset').addEventListener('click', ()=>{
+  for(const k in state) state[k].clear();
+  document.querySelectorAll('.msel').forEach(msel=>{
+    const key = msel.dataset.key;
+    msel.querySelectorAll('.msel-item').forEach(it=>it.classList.remove('checked'));
+  });
+  updateAll();
+  rebuildAllLists();
+});
+function rebuildAllLists(){
+  document.querySelectorAll('.msel').forEach(msel=>{
+    msel.querySelector('.msel-btn').click();
+  });
+  document.querySelectorAll('.msel-panel').forEach(p=>p.classList.remove('open'));
+  document.querySelectorAll('.msel-btn').forEach(b=>b.classList.remove('active'));
+}
+
+function updateFilterLabels(){
+  document.querySelectorAll('.msel').forEach(msel=>{
+    const key = msel.dataset.key;
+    const curLabel = msel.querySelector('.cur-label');
+    curLabel.textContent = state[key].size>0 ? `(${state[key].size})` : '';
+    msel.querySelector('.msel-btn').classList.toggle('active', msel.querySelector('.msel-panel').classList.contains('open'));
+  });
+}
+
+function updateActiveTags(){
+  const wrap = document.getElementById('active-tags');
+  wrap.innerHTML = '';
+  const labels = {model:'Modelo', year:'Ano', city:'Cidade', pay:'Pagamento'};
+  for(const k in state){
+    state[k].forEach(v=>{
+      const tag = document.createElement('div');
+      tag.className='tag';
+      tag.innerHTML = `${labels[k]}: ${v} <button>&times;</button>`;
+      tag.querySelector('button').onclick = ()=>{ state[k].delete(v); updateAll(); rebuildAllLists(); };
+      wrap.appendChild(tag);
+    });
+  }
+}
+
+/* ======================= KPI ======================= */
+function computeKPIs(rows){
+  const total = rows.length;
+  const revenue = rows.reduce((s,d)=>s+d.price,0);
+  const avgTicket = total? revenue/total : 0;
+  const modelCounts = {}; rows.forEach(d=> modelCounts[d.model]=(modelCounts[d.model]||0)+1);
+  const topModel = Object.entries(modelCounts).sort((a,b)=>b[1]-a[1])[0];
+  const cityCounts = {}; rows.forEach(d=> cityCounts[d.city]=(cityCounts[d.city]||0)+1);
+  const topCity = Object.entries(cityCounts).sort((a,b)=>b[1]-a[1])[0];
+  return {total, revenue, avgTicket, topModel, topCity};
+}
+
+function renderKPIs(rows){
+  const k = computeKPIs(rows);
+  const el = document.getElementById('kpi-row');
+  el.innerHTML = `
+    <div class="kpi-card">
+      <div class="kpi-label">Total de vendas</div>
+      <div class="kpi-value num">${fmtBRnum(k.total)}</div>
+      <div class="kpi-sub">de ${RAW.length} registros na base</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Receita total</div>
+      <div class="kpi-value num gold">${k.total? fmtUSDk(k.revenue):'—'}</div>
+      <div class="kpi-sub">${k.total? fmtUSD(k.revenue) : 'sem dados no recorte'}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Ticket médio</div>
+      <div class="kpi-value num">${k.total? fmtUSD(Math.round(k.avgTicket)):'—'}</div>
+      <div class="kpi-sub">por veículo vendido</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Modelo líder</div>
+      <div class="kpi-value" style="font-size:19px;">${k.topModel? k.topModel[0].replace('BYD ','') : '—'}</div>
+      <div class="kpi-sub">${k.topModel? k.topModel[1]+' vendas &middot; '+Math.round(100*k.topModel[1]/k.total)+'% do recorte' : ''}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Praça líder</div>
+      <div class="kpi-value" style="font-size:19px;">${k.topCity? k.topCity[0] : '—'}</div>
+      <div class="kpi-sub">${k.topCity? k.topCity[1]+' vendas registradas' : ''}</div>
+    </div>
+  `;
+  document.getElementById('hero-total').innerHTML = `${fmtBRnum(k.total)}<span class="unit">un.</span>`;
+  document.getElementById('hero-sub').textContent = `de ${RAW.length} registros na base`;
+}
+
+/* ======================= SVG TOOLTIP HELPER ======================= */
+const svgTip = document.createElement('div');
+svgTip.style.cssText = 'position:fixed; pointer-events:none; z-index:999; background:#161922; border:1px solid #252a36; color:#f2efe7; font:12px Inter,sans-serif; padding:7px 11px; border-radius:8px; box-shadow:0 10px 30px -8px rgba(0,0,0,.6); opacity:0; transition:opacity .1s; white-space:nowrap;';
+document.body.appendChild(svgTip);
+function showTip(e, html){ svgTip.innerHTML = html; svgTip.style.opacity = '1'; moveTip(e); }
+function moveTip(e){ svgTip.style.left = (e.clientX+14)+'px'; svgTip.style.top = (e.clientY-10)+'px'; }
+function hideTip(){ svgTip.style.opacity = '0'; }
+
+/* ======================= CHART: ANO MODELO (SVG bar) ======================= */
+function renderYearChart(rows){
+  const years = options.year;
+  const counts = years.map(y=> rows.filter(d=>d.year===y).length);
+  const maxVal = Math.max(...counts, 1);
+  const container = document.getElementById('chart-year');
+  const W = container.clientWidth || 560, H = container.clientHeight || 280;
+  const padL = 34, padB = 28, padT = 14, padR = 10;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const n = years.length;
+  const gap = 0.36;
+  const bw = plotW / n * (1-gap);
+  const step = plotW / n;
+
+  const gridLines = 4;
+  let gridSvg = '';
+  for(let i=0;i<=gridLines;i++){
+    const y = padT + plotH - (plotH*i/gridLines);
+    const val = Math.round(maxVal*i/gridLines);
+    gridSvg += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#1c202a" stroke-width="1"/>`;
+    gridSvg += `<text x="${padL-8}" y="${y+3}" text-anchor="end" font-size="10.5" fill="#8d93a3" font-family="Inter">${val}</text>`;
+  }
+
+  let bars = '', labels = '';
+  years.forEach((y,i)=>{
+    const c = counts[i];
+    const h = plotH * (c/maxVal);
+    const x = padL + step*i + (step-bw)/2;
+    const yTop = padT + plotH - h;
+    const isMax = c===maxVal && c>0;
+    const fill = isMax ? '#c9a86a' : 'rgba(201,168,106,0.28)';
+    bars += `<rect class="ybar" data-year="${y}" data-count="${c}" x="${x.toFixed(1)}" y="${yTop.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(h,0).toFixed(1)}" rx="5" fill="${fill}" style="cursor:pointer; transition:opacity .12s;"/>`;
+    if(isMax && c>0){
+      bars += `<text x="${(x+bw/2).toFixed(1)}" y="${(yTop-8).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="600" fill="#c9a86a" font-family="Inter">${c}</text>`;
+    }
+    labels += `<text x="${(x+bw/2).toFixed(1)}" y="${H-8}" text-anchor="middle" font-size="11.5" fill="#8d93a3" font-family="Inter">${y}</text>`;
+  });
+
+  container.innerHTML = `<svg width="100%" height="100%" viewBox="0 0 ${W} ${H}" style="overflow:visible;">${gridSvg}${bars}${labels}</svg>`;
+
+  container.querySelectorAll('.ybar').forEach(bar=>{
+    bar.addEventListener('mousemove', (e)=>{
+      bar.style.opacity='0.82';
+      showTip(e, `<b style="color:#c9a86a">${bar.dataset.year}</b> &middot; ${bar.dataset.count} venda${bar.dataset.count==1?'':'s'}`);
+    });
+    bar.addEventListener('mouseleave', ()=>{ bar.style.opacity='1'; hideTip(); });
+  });
+
+  const periodEl = document.getElementById('period-badge');
+  const validDates = rows.map(d=>d.date).filter(Boolean).sort();
+  if(validDates.length){
+    const fmt = s=>{ const [y,m,dd]=s.split('-'); return `${dd}/${m}/${y}`; };
+    periodEl.textContent = `${fmt(validDates[0])} — ${fmt(validDates[validDates.length-1])}`;
+  } else {
+    periodEl.textContent = 'período indisponível';
+  }
+}
+
+/* ======================= CHART: PAGAMENTO (SVG donut) ======================= */
+const PAY_COLORS = ['#c9a86a','#5b86e6','#7fae8e','#c98a5b','#9d7fd6','#5bb0c9','#d68fae','#8f9e5b','#c96a6a'];
+function renderPayChart(rows){
+  const pays = options.pay;
+  const counts = pays.map(p=> rows.filter(d=>d.pay===p).length).map((v,i)=>({label:pays[i], value:v}))
+    .filter(o=>o.value>0).sort((a,b)=>b.value-a.value);
+  const total = counts.reduce((s,o)=>s+o.value,0);
+
+  const container = document.getElementById('chart-pay');
+  const size = Math.min(container.clientWidth || 250, container.clientHeight || 250);
+  const cx = size/2, cy = size/2, r = size*0.38, rInner = r*0.62;
+
+  let paths = '';
+  if(total===0){
+    paths = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#1c202a" stroke-width="${r-rInner}"/>`;
+  } else {
+    let startAngle = -Math.PI/2;
+    counts.forEach((o,i)=>{
+      const frac = o.value/total;
+      const endAngle = startAngle + frac*2*Math.PI;
+      const midR = (r+rInner)/2;
+      const x1o = cx + r*Math.cos(startAngle), y1o = cy + r*Math.sin(startAngle);
+      const x2o = cx + r*Math.cos(endAngle), y2o = cy + r*Math.sin(endAngle);
+      const x1i = cx + rInner*Math.cos(endAngle), y1i = cy + rInner*Math.sin(endAngle);
+      const x2i = cx + rInner*Math.cos(startAngle), y2i = cy + rInner*Math.sin(startAngle);
+      const largeArc = frac>0.5 ? 1 : 0;
+      const d = `M ${x1o} ${y1o} A ${r} ${r} 0 ${largeArc} 1 ${x2o} ${y2o} L ${x1i} ${y1i} A ${rInner} ${rInner} 0 ${largeArc} 0 ${x2i} ${y2i} Z`;
+      const color = PAY_COLORS[i%PAY_COLORS.length];
+      paths += `<path class="pslice" data-label="${o.label}" data-value="${o.value}" data-pct="${Math.round(100*frac)}" d="${d}" fill="${color}" stroke="#111319" stroke-width="2.5" style="cursor:pointer; transition:opacity .12s;"/>`;
+      startAngle = endAngle;
+    });
+  }
+
+  const centerLabel = total ? `<text x="${cx}" y="${cy-4}" text-anchor="middle" font-family="Fraunces, serif" font-size="24" fill="#f2efe7">${total}</text>
+     <text x="${cx}" y="${cy+16}" text-anchor="middle" font-family="Inter" font-size="10" letter-spacing="1.5" fill="#565c6b">VENDAS</text>`
+    : `<text x="${cx}" y="${cy+5}" text-anchor="middle" font-family="Inter" font-size="12" fill="#565c6b">Sem dados</text>`;
+
+  container.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" style="display:block; margin:0 auto;">${paths}${centerLabel}</svg>`;
+
+  container.querySelectorAll('.pslice').forEach(slice=>{
+    slice.addEventListener('mousemove', (e)=>{
+      slice.style.opacity='0.8';
+      showTip(e, `<b style="color:${slice.getAttribute('fill')}">${slice.dataset.label}</b> &middot; ${slice.dataset.value} vendas (${slice.dataset.pct}%)`);
+    });
+    slice.addEventListener('mouseleave', ()=>{ slice.style.opacity='1'; hideTip(); });
+  });
+
+  const legendEl = document.getElementById('pay-legend');
+  legendEl.innerHTML = counts.map((o,i)=>`
+    <div class="legend-item"><span class="legend-dot" style="background:${PAY_COLORS[i%PAY_COLORS.length]}"></span>${o.label} &middot; ${total? Math.round(100*o.value/total):0}%</div>
+  `).join('') || '<div class="legend-item">Sem dados no recorte</div>';
+}
+
+/* ======================= TABELA: CIDADE x MODELO LÍDER ======================= */
+function renderCityTable(rows){
+  const byCity = {};
+  rows.forEach(d=>{
+    if(!byCity[d.city]) byCity[d.city] = {total:0, models:{}};
+    byCity[d.city].total++;
+    byCity[d.city].models[d.model] = (byCity[d.city].models[d.model]||0)+1;
+  });
+  const ranked = Object.entries(byCity).map(([city,info])=>{
+    const topModel = Object.entries(info.models).sort((a,b)=>b[1]-a[1])[0];
+    return {city, total:info.total, topModel:topModel[0], topModelCount:topModel[1]};
+  }).sort((a,b)=> b.total-a.total).slice(0,12);
+
+  const maxTotal = Math.max(...ranked.map(r=>r.total), 1);
+  const tbody = document.getElementById('city-table-body');
+  tbody.innerHTML = ranked.map((r,i)=>`
+    <tr>
+      <td><div class="rank-cell"><span class="rank-num">${String(i+1).padStart(2,'0')}</span><span class="city-name">${r.city}</span></div></td>
+      <td><span class="model-pill"><span class="sw" style="background:${MODEL_COLORS[r.topModel]}"></span>${r.topModel.replace('BYD ','')}</span></td>
+      <td class="num-col num">${r.total}<div class="bar-mini"><i style="width:${100*r.total/maxTotal}%"></i></div></td>
+      <td class="num-col share num">${Math.round(100*r.topModelCount/r.total)}%</td>
+    </tr>
+  `).join('') || `<tr><td colspan="4" style="text-align:center; color:var(--text-dim); padding:40px;">Nenhum registro para os filtros selecionados</td></tr>`;
+}
+
+/* ======================= INSIGHTS POR CIDADE ======================= */
+function renderInsights(rows){
+  const byCity = {};
+  rows.forEach(d=>{
+    if(!byCity[d.city]) byCity[d.city] = [];
+    byCity[d.city].push(d);
+  });
+  const cities = Object.entries(byCity).sort((a,b)=> b[1].length - a[1].length).slice(0,10);
+  const col = document.getElementById('insights-col');
+
+  if(!cities.length){
+    col.innerHTML = `<div class="insights-empty">Ajuste os filtros para ver leituras por praça.</div>`;
+    return;
+  }
+
+  col.innerHTML = cities.map(([city, list])=>{
+    const modelCounts = {}; list.forEach(d=> modelCounts[d.model]=(modelCounts[d.model]||0)+1);
+    const topModel = Object.entries(modelCounts).sort((a,b)=>b[1]-a[1])[0];
+    const avgPrice = list.reduce((s,d)=>s+d.price,0)/list.length;
+    const share = Math.round(100*topModel[1]/list.length);
+    const payCounts = {}; list.forEach(d=> payCounts[d.pay]=(payCounts[d.pay]||0)+1);
+    const topPay = Object.entries(payCounts).sort((a,b)=>b[1]-a[1])[0];
+
+    let phrase;
+    if(list.length===1){
+      phrase = `Única venda registrada: <b>${topModel[0].replace('BYD ','')}</b>, via ${topPay[0]}, por ${fmtUSD(list[0].price)}.`;
+    } else if(share>=60){
+      phrase = `Forte concentração em <b>${topModel[0].replace('BYD ','')}</b>, presente em ${share}% das vendas locais. Ticket médio de ${fmtUSD(Math.round(avgPrice))}.`;
+    } else {
+      phrase = `Demanda diversificada — <b>${topModel[0].replace('BYD ','')}</b> lidera com ${share}% das ${list.length} vendas. Pagamento mais usado: ${topPay[0]}.`;
+    }
+
+    return `
+      <div class="insight-card">
+        <div class="ic-city">${city} <span class="st">${list.length} venda${list.length>1?'s':''}</span></div>
+        <p>${phrase}</p>
+      </div>
+    `;
+  }).join('');
+}
+
+/* ======================= UPDATE ALL ======================= */
+function updateAll(){
+  const rows = filtered();
+  renderKPIs(rows);
+  renderYearChart(rows);
+  renderPayChart(rows);
+  renderCityTable(rows);
+  renderInsights(rows);
+  updateFilterLabels();
+  updateActiveTags();
+}
+
+updateAll();
+
+let resizeT;
+window.addEventListener('resize', ()=>{
+  clearTimeout(resizeT);
+  resizeT = setTimeout(()=>{
+    const rows = filtered();
+    renderYearChart(rows);
+    renderPayChart(rows);
+  }, 150);
+});
+</script>
+</body>
+</html>
